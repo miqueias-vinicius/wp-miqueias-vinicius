@@ -2,9 +2,9 @@
 
 /* ==================================================================
 Plugin Name: Metaboxs (Miqueias Vinicius)
-Plugin URI: https://miqueiasvinicius.com/
+Plugin URI: https://github.com/miqueias-vinicius/wp-mv-metaboxs
 Description: Gerenciamento de metaboxs customizados e organizado em grupos
-Version: 1.0.0
+Version: 1.0.1
 Requires at least: 5.0
 Requires PHP: 5.2
 Author: Miqueias Vinicius
@@ -17,6 +17,7 @@ if (!defined('ABSPATH')) {
     die('Invalid request.');
 }
 
+define('WP_MV_METABOXS_PLUGIN_URI', 'https://github.com/miqueias-vinicius/wp-mv-metaboxs');
 define('WP_MV_METABOXS_DIR', plugin_dir_path(__FILE__));
 define('WP_MV_METABOXS_URL', plugin_dir_url(__FILE__));
 define('WP_MV_METABOXS_TEXT_DOMAIN', 'wp-mv-metaboxs');
@@ -164,6 +165,7 @@ if (!class_exists('WP_MV_Metaboxs')) {
                     echo "<p class='group'>";
                     echo "<label for='{$name}'>{$field["label"]}</label>";
                     echo "<select {$mask} id='{$name}' name='{$name}'>";
+                    echo "<option value='no_set'>Selecione uma opção</option>";
 
                     foreach ($field['options'] as $option_value => $option_label) {
                         $selected = selected($value, $option_value, false);
@@ -197,7 +199,7 @@ if (!class_exists('WP_MV_Metaboxs')) {
                             echo "<p class='group'>";
                             echo "<label for='{$name}'>{$field["label"]}</label>";
                             echo "<select {$mask} id='{$name}' name='{$name}' class='selectize'>";
-                            echo "<option value=''>Selecione uma opção</option>";
+                            echo "<option value='no_set'>Selecione uma opção</option>";
 
                             while ($posts->have_posts()) {
                                 $posts->the_post();
@@ -248,7 +250,7 @@ if (!class_exists('WP_MV_Metaboxs')) {
                             echo "<p class='group'>";
                             echo "<label for='{$name}'>{$field["label"]}</label>";
                             echo "<select {$mask} id='{$name}' name='{$name}'>";
-                            echo "<option value=''>Selecione uma opção</option>";
+                            echo "<option value='no_set'>Selecione uma opção</option>";
 
                             foreach ($terms as $term) {
                                 $selected = selected($value, $term->term_id, false);
