@@ -1,0 +1,107 @@
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: inline-block;
+  line-height: 1;
+  white-space: nowrap;
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+}
+
+.material-symbols-outlined:before {
+  visibility: visible;
+}
+
+.wp_mv_metaboxs {
+  display: grid;
+  grid-template-columns: 2fr 8fr;
+  min-height: 400px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.wp_mv_metaboxs > ul {
+  position: relative;
+  box-sizing: border-box;
+  margin: 0;
+  border-right: 1px solid #eee;
+  background-color: #fafafa;
+  padding: 0 0 10px;
+  line-height: 1em;
+}
+
+.wp_mv_metaboxs > ul li {
+  margin-bottom: 0;
+}
+
+.wp_mv_metaboxs > ul li a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  margin: 0;
+  box-shadow: none;
+  padding: 14px 20px;
+  line-height: 20px !important;
+  text-decoration: none;
+}
+
+.wp_mv_metaboxs > ul li a i {
+  font-size: 14px;
+}
+
+.wp_mv_metaboxs > ul li a.active {
+  font-weight: 600;
+  background-color: #eee;
+  color: #555;
+}
+
+.wp_mv_metaboxs > ul li:not(:last-child) {
+  border-bottom: 1px solid #eeeeee;
+}
+
+.wp_mv_metaboxs > div {
+  grid-column: 2;
+}
+
+.wp_mv_metaboxs > div .group {
+  margin: 0;
+  padding: 14px 20px;
+  font-size: 16px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.wp_mv_metaboxs > div .group label {
+  margin: 0;
+  padding: 0;
+  width: 150px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.wp_mv_metaboxs > div .group input,
+.wp_mv_metaboxs > div .group textarea {
+  margin: 0;
+}
+
+.wp_mv_metaboxs > div .group input[type="checkbox"] {
+  width: fit-content;
+}
+
+.wp_mv_metaboxs > div .fonte-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #ddd;
+  /* padding: 12px 0; */
+  border-radius: 6px;
+  margin: 12px 0;
+}
+
+.wp_mv_metaboxs > div .fonte-group .group {
+  padding: 0px 5px 0px 160px !important;
+}
