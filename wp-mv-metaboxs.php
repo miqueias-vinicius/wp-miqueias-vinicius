@@ -4,7 +4,7 @@
 Plugin Name: Metaboxs (Miqueias Vinicius)
 Plugin URI: https://github.com/miqueias-vinicius/wp-mv-metaboxs
 Description: Gerenciamento de metaboxs customizados e organizado em grupos
-Version: 1.0.1
+Version: 1.1.0
 Requires at least: 5.0
 Requires PHP: 5.2
 Author: Miqueias Vinicius
@@ -39,6 +39,7 @@ if (!class_exists('WP_MV_Metaboxs')) {
             add_action("admin_enqueue_scripts", [$this, "assets"]);
             add_action("add_meta_boxes", [$this, "add_meta_box"]);
             add_action("save_post", [$this, "save_meta_box"]);
+            add_action('rest_api_init', [$this, 'register_rest_routes']);
         }
 
         public function assets()
@@ -138,7 +139,7 @@ if (!class_exists('WP_MV_Metaboxs')) {
                     </div>
                 <?php endforeach; ?>
             </div>
-<?php
+            <?php
         }
 
         private function render_field($name, $field, $value)
@@ -186,6 +187,56 @@ if (!class_exists('WP_MV_Metaboxs')) {
                         });
                     });
                 </script>";
+                    break;
+                case "media":
+                    echo "<p class='group'>";
+                    echo "<label for='{$name}'>{$field['label']}</label>";
+                    echo "<div>";
+                    echo "<div id='{$name}_preview' style='margin-top: 10px; " . ($value ? '' : 'display: none;') . "'>";
+                    if ($value) {
+                        echo "<img src='" . esc_url($value) . "'style='width: 131px;height: 131px;object-fit: cover;'>";
+                    }
+                    echo "</div>";
+                    echo "<input type='hidden' id='{$name}' name='{$name}' value='" . esc_attr($value) . "'>";
+                    echo "<button type='button' id='{$name}_button' class='button button-primary'>Enviar mídia</button>";
+                    echo "<button type='button' id='{$name}_remove_button' class='button' style='display: " . ($value ? 'inline' : 'none') . ";'>Excluir</button>";
+                    echo "</div>";
+                    echo "</p>";
+            ?>
+                    <script>
+                        (function($) {
+                            $(document).ready(function() {
+                                const mediaField = $('#<?php echo $name; ?>');
+                                const mediaPreview = $('#<?php echo $name; ?>_preview');
+                                const uploadButton = $('#<?php echo $name; ?>_button');
+                                const removeButton = $('#<?php echo $name; ?>_remove_button');
+
+                                uploadButton.on('click', function(e) {
+                                    e.preventDefault();
+                                    const mediaUploader = wp.media({
+                                        title: 'Selecione uma mídia',
+                                        button: {
+                                            text: 'Selecionar'
+                                        },
+                                        multiple: false
+                                    }).on('select', function() {
+                                        const attachment = mediaUploader.state().get('selection').first().toJSON();
+                                        mediaField.val(attachment.url);
+                                        mediaPreview.html(`<img src="${attachment.url}" style="width: 131px;height: 131px;object-fit: cover;">`).show();
+                                        removeButton.show();
+                                    }).open();
+                                });
+
+                                removeButton.on('click', function(e) {
+                                    e.preventDefault();
+                                    mediaField.val('');
+                                    mediaPreview.hide();
+                                    removeButton.hide();
+                                });
+                            });
+                        })(jQuery);
+                    </script>
+<?php
                     break;
                 case "post_type":
                     if (!empty($field['options']['post_type'])) {
@@ -311,11 +362,82 @@ if (!class_exists('WP_MV_Metaboxs')) {
                         $sanitize_callback = $field['sanitize_callback'] ?? 'sanitize_text_field';
                         $value = call_user_func($sanitize_callback, $_POST[$name]);
                         update_post_meta($post_id, $name, $value);
-                    } else {
-                        delete_post_meta($post_id, $name);
                     }
                 }
             }
+        }
+
+        public function register_rest_routes()
+        {
+            register_rest_route(
+                "wp-mv-metaboxs/v1",
+                "{$this->post_type}",
+                [
+                    "methods" => "GET",
+                    "callback" => [$this, "api_get_metabox_item_data"],
+                ]
+            );
+
+            register_rest_route(
+                "wp-mv-metaboxs/v1",
+                "{$this->post_type}",
+                [
+                    "methods" => "POST",
+                    "callback" => [$this, "api_update_metabox_item_data"],
+                ]
+            );
+        }
+
+        public function api_get_metabox_item_data(WP_REST_Request $request)
+        {
+            $post_id = $request->get_param('post_id');
+
+            if (!get_post($post_id)) {
+                return new WP_REST_Response(['error' => 'O ID do post informado é inválido ou não existe'], 403);
+            }
+
+            $metabox_data = [];
+            $metaboxs = $this->metaboxs();
+
+            $metabox_data['id'] = $post_id;
+            $metabox_data['title'] = get_the_title($post_id);
+            $metabox_data['content'] = apply_filters('the_content', get_post_field('post_content', $post_id));
+
+            foreach ($metaboxs as $group_id => $group) {
+                foreach ($group['items'] as $field_id => $field) {
+                    $metabox_data[$field_id] = get_post_meta($post_id, $field_id, true);
+                }
+            }
+
+            return new WP_REST_Response($metabox_data, 200);
+        }
+
+        public function api_update_metabox_item_data(WP_REST_Request $request)
+        {
+            $post_id = $request->get_param('post_id');
+            $updated_data = $request->get_json_params();
+
+            if (!get_post($post_id)) {
+                return new WP_REST_Response(['error' => 'O ID do post informado é inválido ou não existe'], 403);
+            }
+
+            $metaboxs = $this->metaboxs();
+
+            $metabox_data['id'] = $post_id;
+            $metabox_data['title'] = get_the_title($post_id);
+            $metabox_data['content'] = apply_filters('the_content', get_post_field('post_content', $post_id));
+
+            foreach ($updated_data as $field_id => $value) {
+                foreach ($metaboxs as $group_id => $group) {
+                    if (isset($group['items'][$field_id])) {
+                        $sanitize_callback = $group['items'][$field_id]['sanitize_callback'] ?? 'sanitize_text_field';
+                        $sanitized_value = call_user_func($sanitize_callback, $value);
+                        update_post_meta($post_id, $field_id, $sanitized_value);
+                    }
+                }
+            }
+
+            return new WP_REST_Response(['success' => true], 200);
         }
     }
 }
