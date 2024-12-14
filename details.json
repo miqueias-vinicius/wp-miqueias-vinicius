@@ -1,7 +1,7 @@
 {
   "name": "WP MV Metaboxs",
   "version": "1.1.1",
-  "download_url": "https://example.com/plugin-name-2.0.zip",
+  "download_url": "https://github.com/miqueias-vinicius/wp-mv-metaboxs/archive/refs/tags/1.1.1.zip",
   "sections": {
     "description": "Gerenciamento de metaboxs customizados e organizado em grupos."
   }
