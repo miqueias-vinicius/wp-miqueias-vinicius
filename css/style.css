@@ -70,7 +70,7 @@
 .wp_mv_metaboxs > div .group {
   display: flex;
   gap: 12px;
-  align-items: center;
+  align-items: start;
   margin: 0;
   padding: 14px 20px;
   font-size: 16px;
@@ -79,11 +79,15 @@
 
 .wp_mv_metaboxs > div .group label {
   margin: 0;
-  padding: 0;
+  padding: 6px 0;
   width: 240px;
   min-width: 240px;
   font-size: 16px;
   line-height: 24px;
+}
+
+.wp_mv_metaboxs > div .group > div:nth-child(2) {
+  width: 100%;
 }
 
 .wp_mv_metaboxs > div .group input,

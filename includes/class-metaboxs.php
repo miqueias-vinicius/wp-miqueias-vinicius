@@ -96,6 +96,8 @@ if (!class_exists('WP_MV_Metabox')) {
         public function render_metabox($post)
         {
             $metaboxs = $this->metaboxs();
+
+            echo "<style> #{$this->id} .inside { padding: 0; margin: 0; } </style>";
 ?>
             <div class="wp_mv_metaboxs">
                 <ul>
@@ -350,12 +352,18 @@ if (!class_exists('WP_MV_Metabox')) {
                 foreach ($metabox['items'] as $name => $field) {
                     if (isset($_POST[$name])) {
                         $sanitize_callback = $field['sanitize_callback'] ?? 'sanitize_text_field';
+
+                        if ($field['type'] === 'editor') {
+                            $sanitize_callback = 'wp_kses_post';
+                        }
+
                         $value = call_user_func($sanitize_callback, $_POST[$name]);
                         update_post_meta($post_id, $name, $value);
                     }
                 }
             }
         }
+
 
         public function register_rest_routes()
         {
