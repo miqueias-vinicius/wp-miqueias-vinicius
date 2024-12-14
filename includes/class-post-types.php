@@ -52,7 +52,7 @@ if (!class_exists('WP_MV_PostType')) {
                 'public'             => $this->args['public'] ?? true,
                 'has_archive'        => $this->args['has_archive'] ?? true,
                 'rewrite'            => ['slug' => $this->args['slug'] ?? $this->post_type],
-                'menu_icon'          => $this->args['menu_icon'] ?? 'dashicons-hammer',
+                'menu_icon'          => $this->args['menu_icon'] ?? 'dashicons-edit-page',
                 'supports'           => $this->args['supports'] ?? ['title', 'editor', 'thumbnail', 'excerpt'],
                 'show_in_rest'       => $this->args['show_in_rest'] ?? true,
                 'hierarchical'       => $this->args['hierarchical'] ?? false,

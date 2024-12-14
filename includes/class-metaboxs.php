@@ -239,7 +239,7 @@ if (!class_exists('WP_MV_Metabox')) {
                         ));
 
                         if (!is_wp_error($posts) && $posts->have_posts()) {
-                            echo "<p class='group'>";
+                            echo "<div class='group'>";
                             echo "<label for='{$name}'>{$field["label"]}</label>";
                             echo "<select {$mask} id='{$name}' name='{$name}' class='selectize'>";
                             echo "<option value='no_set'>Selecione uma opção</option>";
@@ -256,7 +256,7 @@ if (!class_exists('WP_MV_Metabox')) {
                             wp_reset_postdata();
 
                             echo "</select>";
-                            echo "</p>";
+                            echo "</div>";
 
                             echo "<script>
                                     jQuery(document).ready(function($) {
@@ -270,16 +270,16 @@ if (!class_exists('WP_MV_Metabox')) {
                                     });
                                 </script>";
                         } else {
-                            echo "<p class='group'>";
+                            echo "<div class='group'>";
                             echo "<label>{$field["label"]}</label>";
                             echo "<em>Não foram encontrados posts para '{$field['options']['post_type']}'</em>";
-                            echo "</p>";
+                            echo "</div>";
                         }
                     } else {
-                        echo "<p class='group'>";
+                        echo "<div class='group'>";
                         echo "<label>{$field["label"]}</label>";
                         echo "<em>O tipo de post não foi especificada no campo.</em>";
-                        echo "</p>";
+                        echo "</div>";
                     }
                     break;
                 case "taxonomy":
@@ -290,7 +290,7 @@ if (!class_exists('WP_MV_Metabox')) {
                         ]);
 
                         if (!is_wp_error($terms) && !empty($terms)) {
-                            echo "<p class='group'>";
+                            echo "<div class='group'>";
                             echo "<label for='{$name}'>{$field["label"]}</label>";
                             echo "<select {$mask} id='{$name}' name='{$name}'>";
                             echo "<option value='no_set'>Selecione uma opção</option>";
@@ -301,7 +301,7 @@ if (!class_exists('WP_MV_Metabox')) {
                             }
 
                             echo "</select>";
-                            echo "</p>";
+                            echo "</div>";
 
                             echo "<script>
                             jQuery(document).ready(function($) {
@@ -315,23 +315,23 @@ if (!class_exists('WP_MV_Metabox')) {
                             });
                         </script>";
                         } else {
-                            echo "<p class='group'>";
+                            echo "<div class='group'>";
                             echo "<label>{$field["label"]}</label>";
                             echo "<em>Não foram encontrados termos para a taxonomia '{$field['options']['taxonomy']}'</em>";
-                            echo "</p>";
+                            echo "</div>";
                         }
                     } else {
-                        echo "<p class='group'>";
+                        echo "<div class='group'>";
                         echo "<label>{$field["label"]}</label>";
                         echo "<em>A taxonomia não foi especificada no campo.</em>";
-                        echo "</p>";
+                        echo "</div>";
                     }
                     break;
                 default:
-                    echo "<p class='group'>";
+                    echo "<div class='group'>";
                     echo "<label for='{$name}'>{$field["label"]}</label>";
                     echo "<input {$mask} id='{$name}' type='{$field["type"]}' name='{$name}' value='" . esc_attr($value) . "' />";
-                    echo "</p>";
+                    echo "</div>";
                     break;
             }
         }
