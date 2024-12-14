@@ -22,6 +22,37 @@ if (!class_exists('WP_MV_PostType')) {
             register_post_type($this->post_type, $args);
         }
 
+        public function add_column($title, $metabox_id, $type = "text")
+        {
+            add_filter('manage_' . $this->post_type . '_posts_columns', function ($columns) use ($title) {
+                $columns['cliente'] = $title;
+                return $columns;
+            });
+
+            add_action('manage_' . $this->post_type . '_posts_custom_column', function ($column, $post_id) use ($metabox_id, $type) {
+                if ($column == 'cliente') {
+                    $value = get_post_meta($post_id, $metabox_id, true);
+
+                    switch ($type) {
+                        case 'text':
+                            echo esc_html($value);
+                            break;
+                        case 'user_id': {
+                                if (get_user($value)) {
+                                    echo esc_html(get_user_by('id', $value)->display_name);
+                                } else {
+                                    echo esc_html("–");
+                                }
+                            }
+                            break;
+                        default:
+                            echo esc_html($value);
+                            break;
+                    }
+                }
+            }, 10, 2);
+        }
+
         private function build_labels()
         {
             $name = $this->args['name'] ?? ucfirst($this->post_type);
