@@ -128,20 +128,33 @@ if (!class_exists('WP_MV_Metabox')) {
             switch ($field["type"]) {
                 case "checkbox":
                     $checked = checked($value, '1', false);
-                    echo "<p class='group'>";
+                    echo "<div class='group'>";
                     echo "<input type='hidden' name='{$name}' value='0' />";
                     echo "<label for='{$name}'>{$field["label"]}</label>";
                     echo "<input {$mask} type='checkbox' id='{$name}' name='{$name}' value='1' {$checked} />";
-                    echo "</p>";
+                    echo "</div>";
                     break;
                 case "textarea":
-                    echo "<p class='group'>";
+                    echo "<div class='group'>";
                     echo "<label for='{$name}'>{$field["label"]}</label>";
                     echo "<textarea {$mask} id='{$name}' name='{$name}'>" . esc_textarea($value) . "</textarea>";
-                    echo "</p>";
+                    echo "</div>";
+                    break;
+                case "editor":
+                    echo "<div class='group'>";
+                    echo "<label for='{$name}'>{$field["label"]}</label>";
+                    $editor_settings = [
+                        'textarea_name' => $name,
+                        'media_buttons' => false,
+                        'textarea_rows' => 10,
+                        'teeny'         => true,
+                        'quicktags'     => true
+                    ];
+                    wp_editor($value, $name, $editor_settings);
+                    echo "</div>";
                     break;
                 case "select":
-                    echo "<p class='group'>";
+                    echo "<div class='group'>";
                     echo "<label for='{$name}'>{$field["label"]}</label>";
                     echo "<select {$mask} id='{$name}' name='{$name}'>";
                     echo "<option value='no_set'>Selecione uma opção</option>";
@@ -152,8 +165,7 @@ if (!class_exists('WP_MV_Metabox')) {
                     }
 
                     echo "</select>";
-                    echo "</p>";
-
+                    echo "</div>";
                     echo "<script>
                     jQuery(document).ready(function($) {
                         $('#{$name}').selectize({
@@ -167,7 +179,7 @@ if (!class_exists('WP_MV_Metabox')) {
                 </script>";
                     break;
                 case "media":
-                    echo "<p class='group'>";
+                    echo "<div class='group'>";
                     echo "<label for='{$name}'>{$field['label']}</label>";
                     echo "<div>";
                     echo "<div id='{$name}_preview' style='margin-top: 10px; " . ($value ? '' : 'display: none;') . "'>";
@@ -179,7 +191,7 @@ if (!class_exists('WP_MV_Metabox')) {
                     echo "<button type='button' id='{$name}_button' class='button button-primary'>Enviar mídia</button>";
                     echo "<button type='button' id='{$name}_remove_button' class='button' style='display: " . ($value ? 'inline' : 'none') . ";'>Excluir</button>";
                     echo "</div>";
-                    echo "</p>";
+                    echo "</div>";
             ?>
                     <script>
                         (function($) {
