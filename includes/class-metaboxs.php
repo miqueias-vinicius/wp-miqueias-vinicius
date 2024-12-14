@@ -327,6 +327,59 @@ if (!class_exists('WP_MV_Metabox')) {
                         echo "</div>";
                     }
                     break;
+                case "users":
+                    if (!empty($field['options']['role'])) {
+
+                        $args = array(
+                            'role__in'    => $field['options']['role'],
+                            'orderby' => 'display_name',
+                            'order'   => 'ASC',
+                        );
+
+                        $users = get_users($args);
+
+                        if (!empty($users)) {
+                            echo "<div class='group'>";
+                            echo "<label for='{$name}'>{$field["label"]}</label>";
+                            echo "<select {$mask} id='{$name}' name='{$name}' class='selectize'>";
+                            echo "<option value='no_set'>Selecione um usuário</option>";
+
+                            foreach ($users as $user) {
+                                $id = $user->ID;
+                                $display_name = $user->display_name;
+
+                                $selected = selected($value, $id, false);
+                                echo "<option value='{$id}' {$selected}>{$display_name}</option>";
+                            }
+
+                            echo "</select>";
+                            echo "</div>";
+
+                            echo "<script>
+                                        jQuery(document).ready(function($) {
+                                            $('#{$name}').selectize({
+                                                maxItems: 1,
+                                                valueField: 'value',
+                                                labelField: 'text',
+                                                searchField: 'text',
+                                                create: false
+                                            });
+                                        });
+                                    </script>";
+                        } else {
+                            echo "<div class='group'>";
+                            echo "<label>{$field["label"]}</label>";
+                            echo "<em>Não foram encontrados usuários com o papel '{$field['options']['role']}'</em>";
+                            echo "</div>";
+                        }
+                    } else {
+                        echo "<div class='group'>";
+                        echo "<label>{$field["label"]}</label>";
+                        echo "<em>O papel do usuário não foi especificado no campo.</em>";
+                        echo "</div>";
+                    }
+                    break;
+
                 default:
                     echo "<div class='group'>";
                     echo "<label for='{$name}'>{$field["label"]}</label>";
