@@ -16,10 +16,33 @@ if (!class_exists('WP_MV_PostType')) {
 
         public function register()
         {
-            $labels = $this->build_labels();
-            $args = $this->build_args($labels);
+            if (!post_type_exists($this->post_type)) {
+                $labels = $this->build_labels();
+                $args = $this->build_args($labels);
 
-            register_post_type($this->post_type, $args);
+                register_post_type($this->post_type, $args);
+            } else {
+                $get_post_type = get_post_type_object($this->post_type);
+
+                if ($get_post_type) {
+                    $labels = $this->build_labels();
+
+                    $get_post_type->labels->name               = $labels['name'];
+                    $get_post_type->labels->singular_name      = $labels['singular_name'];
+                    $get_post_type->labels->menu_name          = $labels['menu_name'];
+                    $get_post_type->labels->name_admin_bar     = $labels['name_admin_bar'];
+                    $get_post_type->labels->add_new            = $labels['add_new'];
+                    $get_post_type->labels->add_new_item       = $labels['add_new_item'];
+                    $get_post_type->labels->new_item           = $labels['new_item'];
+                    $get_post_type->labels->edit_item          = $labels['edit_item'];
+                    $get_post_type->labels->view_item          = $labels['view_item'];
+                    $get_post_type->labels->all_items          = $labels['all_items'];
+                    $get_post_type->labels->search_items       = $labels['search_items'];
+                    $get_post_type->labels->parent_item_colon  = $labels['parent_item_colon'];
+                    $get_post_type->labels->not_found          = $labels['not_found'];
+                    $get_post_type->labels->not_found_in_trash = $labels['not_found_in_trash'];
+                }
+            }
         }
 
         public function add_column($title, $metabox_id, $type = "text")
