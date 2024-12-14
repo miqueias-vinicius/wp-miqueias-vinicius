@@ -47,13 +47,13 @@ if (!class_exists('WP_MV_PostType')) {
 
         public function add_column($title, $metabox_id, $type = "text")
         {
-            add_filter('manage_' . $this->post_type . '_posts_columns', function ($columns) use ($title) {
-                $columns['cliente'] = $title;
+            add_filter('manage_' . $this->post_type . '_posts_columns', function ($columns) use ($title, $metabox_id) {
+                $columns[$metabox_id] = $title;
                 return $columns;
             });
 
             add_action('manage_' . $this->post_type . '_posts_custom_column', function ($column, $post_id) use ($metabox_id, $type) {
-                if ($column == 'cliente') {
+                if ($column == $metabox_id) {
                     $value = get_post_meta($post_id, $metabox_id, true);
 
                     switch ($type) {
