@@ -4,7 +4,7 @@
 Plugin Name: Metaboxs (Miqueias Vinicius)
 Plugin URI: https://github.com/miqueias-vinicius/wp-mv-metaboxs
 Description: Gerenciamento de metaboxs customizados e organizado em grupos
-Version: 1.1.0
+Version: 1.1.1
 Requires at least: 5.0
 Requires PHP: 5.2
 Author: Miqueias Vinicius
@@ -21,6 +21,8 @@ define('WP_MV_METABOXS_PLUGIN_URI', 'https://github.com/miqueias-vinicius/wp-mv-
 define('WP_MV_METABOXS_DIR', plugin_dir_path(__FILE__));
 define('WP_MV_METABOXS_URL', plugin_dir_url(__FILE__));
 define('WP_MV_METABOXS_TEXT_DOMAIN', 'wp-mv-metaboxs');
+
+require_once 'includes/update.php';
 
 if (!class_exists('WP_MV_Metaboxs')) {
     class WP_MV_Metaboxs
