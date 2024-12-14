@@ -37,6 +37,22 @@ if (!class_exists('WP_MV_PostType')) {
                         case 'text':
                             echo esc_html($value);
                             break;
+                        case 'post_id': {
+                                if (get_post($value)) {
+                                    echo esc_html(get_post_title($value));
+                                } else {
+                                    echo esc_html("–");
+                                }
+                            }
+                            break;
+                        case 'taxonomy_id': {
+                                if (get_term($value)) {
+                                    echo esc_html(get_term($value)->name);
+                                } else {
+                                    echo esc_html("–");
+                                }
+                            }
+                            break;
                         case 'user_id': {
                                 if (get_user($value)) {
                                     echo esc_html(get_user_by('id', $value)->display_name);
