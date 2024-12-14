@@ -122,3 +122,7 @@
 .wp_mv_metaboxs > div .fonte-group .group {
   padding: 0px 5px 0px 160px !important;
 }
+
+#wpfooter {
+  position: relative;
+}
