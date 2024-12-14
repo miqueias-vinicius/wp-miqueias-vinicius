@@ -1,7 +1,7 @@
 <?php
 
-if (!class_exists('WP_MV_Metaboxs')) {
-    class WP_MV_Metaboxs
+if (!class_exists('WP_MV_Metabox')) {
+    class WP_MV_Metabox
     {
         private $id;
         private $title;
@@ -24,7 +24,7 @@ if (!class_exists('WP_MV_Metaboxs')) {
         {
             wp_enqueue_style(
                 "wp-mv-metaboxs",
-                WP_MV_METABOXS_URL . "/style.css"
+                WP_MV_METABOXS_URL . "/css/style.css"
             );
 
             wp_enqueue_style(
@@ -49,7 +49,7 @@ if (!class_exists('WP_MV_Metaboxs')) {
 
             wp_enqueue_script(
                 "wp-mv-metaboxs",
-                WP_MV_METABOXS_URL . "/script.js"
+                WP_MV_METABOXS_URL . "/js/script.js"
             );
         }
 
