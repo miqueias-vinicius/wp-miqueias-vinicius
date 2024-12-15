@@ -48,7 +48,7 @@ if (!class_exists('WP_MV_PostType')) {
         public function add_column($title, $metabox_id, $type = "text")
         {
             add_filter('manage_' . $this->post_type . '_posts_columns', function ($columns) use ($title, $metabox_id) {
-                $columns[$metabox_id] = $title;
+                $columns = array_slice($columns, 0, 2, true) + [$metabox_id => $title] + array_slice($columns, 1, null, true);
                 return $columns;
             });
 
@@ -61,8 +61,8 @@ if (!class_exists('WP_MV_PostType')) {
                             echo esc_html($value);
                             break;
                         case 'post_id': {
-                                if (get_post($value)) {
-                                    echo esc_html(get_post_title($value));
+                                if (get_the_title($value)) {
+                                    echo esc_html(get_the_title($value));
                                 } else {
                                     echo esc_html("–");
                                 }
