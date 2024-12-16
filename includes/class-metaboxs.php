@@ -186,7 +186,17 @@ if (!class_exists('WP_MV_Metabox')) {
                     echo "<div>";
                     echo "<div id='{$name}_preview' style='margin-top: 10px; " . ($value ? '' : 'display: none;') . "'>";
                     if ($value) {
-                        echo "<img src='" . esc_url($value) . "'style='width: 131px;height: 131px;object-fit: cover;'>";
+                        $file_extension = pathinfo($value, PATHINFO_EXTENSION);
+                        $video_extensions = ['mp4', 'mov', 'avi', 'mkv', 'flv'];
+
+                        if (in_array(strtolower($file_extension), $video_extensions)) {
+                            echo "<video width='131' height='131' controls>
+                                        <source src='" . esc_url($value) . "' type='video/" . esc_attr($file_extension) . "'>
+                                        Seu navegador não suporta o elemento de vídeo.
+                                      </video>";
+                        } else {
+                            echo "<img src='" . esc_url($value) . "' style='width: 131px; height: 131px; object-fit: cover;'>";
+                        }
                     }
                     echo "</div>";
                     echo "<input type='hidden' id='{$name}' name='{$name}' value='" . esc_attr($value) . "'>";
@@ -213,8 +223,18 @@ if (!class_exists('WP_MV_Metabox')) {
                                         multiple: false
                                     }).on('select', function() {
                                         const attachment = mediaUploader.state().get('selection').first().toJSON();
-                                        mediaField.val(attachment.url);
-                                        mediaPreview.html(`<img src="${attachment.url}" style="width: 131px;height: 131px;object-fit: cover;">`).show();
+                                        const url = attachment.url;
+                                        const file_extension = url.split('.').pop().toLowerCase();
+                                        mediaField.val(url);
+
+                                        if (['mp4', 'mov', 'avi', 'mkv', 'flv'].includes(file_extension)) {
+                                            mediaPreview.html(`<video width='131' height='131' controls>
+                                                                <source src="${url}" type="video/${file_extension}">
+                                                                Seu navegador não suporta o elemento de vídeo.
+                                                              </video>`).show();
+                                        } else {
+                                            mediaPreview.html(`<img src="${url}" style="width: 131px; height: 131px; object-fit: cover;">`).show();
+                                        }
                                         removeButton.show();
                                     }).open();
                                 });
@@ -230,6 +250,7 @@ if (!class_exists('WP_MV_Metabox')) {
                     </script>
 <?php
                     break;
+
                 case "post_type":
                     if (!empty($field['options']['post_type'])) {
 
