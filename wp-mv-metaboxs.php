@@ -26,4 +26,6 @@ require_once 'includes/class-metaboxs.php';
 
 require_once 'includes/class-post-types.php';
 
+require_once 'includes/class-taxonomies.php';
+
 require_once 'includes/update.php';
