@@ -22,10 +22,7 @@ if (!class_exists('WP_MV_Metabox')) {
 
         public function assets()
         {
-            wp_enqueue_style(
-                "wp-mv-metaboxs",
-                WP_MV_URL . "/css/style.css"
-            );
+            wp_enqueue_style("wp-mv-metaboxs", WP_MV_URL . "css/style.css", array(), time(), 'all');
 
             wp_enqueue_style(
                 "wp-mv-metaboxs-icons",
