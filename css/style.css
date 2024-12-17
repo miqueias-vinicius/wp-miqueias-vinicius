@@ -44,18 +44,73 @@
   font-size: 16px;
   margin: 0;
   box-shadow: none;
-  padding: 14px 20px;
+  padding: 16px 20px;
   line-height: 20px !important;
   text-decoration: none;
+  border-left: 2px solid transparent;
 }
 
 .wp_mv_metaboxs > ul li a i {
+  color: #2271b1;
   font-size: 14px;
 }
 
+.wp_mv_metaboxs > ul li a span {
+  display: block;
+}
+
 .wp_mv_metaboxs > ul li a.active {
-  background-color: #eee;
-  color: #555;
+  background: #fff;
+  border-left: 2px solid #2271b1;
+}
+
+.wp_mv_metaboxs > ul li .wp-mv-tab {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* .wp_mv_metaboxs > ul li .wp-mv-tab .wp-mv-tab-info {
+  display: flex;
+} */
+
+.wp_mv_metaboxs > ul li .wp-mv-tab .wp-mv-tab-label {
+  font-size: 0.8125rem;
+  line-height: 1.4615384615;
+  font-weight: bold;
+  letter-spacing: -0.08px;
+  text-transform: uppercase;
+  color: #121116;
+}
+
+.wp_mv_metaboxs > ul li .wp-mv-tab .wp-mv-tab-description {
+  margin-top: 2px;
+  color: #72777c;
+  font-size: 0.8125rem;
+  line-height: 1.2307692308;
+  transition: all 150ms ease-out;
+}
+
+/* Tab Header */
+.wp_mv_metaboxs .wp-mv-tab-header {
+  position: relative;
+  border-bottom: 1px solid #e0e4e9;
+  padding-bottom: 24px;
+}
+.wp_mv_metaboxs .wp-mv-tab-header:before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 48px;
+  height: 2px;
+  bottom: -1px;
+  left: 0;
+  background: #2271b1;
+}
+.wp_mv_metaboxs .wp-mv-tab-header h2 {
+  font-size: 16px !important;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 10px 0 0 24px !important;
 }
 
 .wp_mv_metaboxs > ul li:not(:last-child) {
