@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Update Checker Library 5.5
  * http://w-shadow.com/

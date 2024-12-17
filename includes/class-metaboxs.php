@@ -24,7 +24,7 @@ if (!class_exists('WP_MV_Metabox')) {
         {
             wp_enqueue_style(
                 "wp-mv-metaboxs",
-                WP_MV_METABOXS_URL . "/css/style.css"
+                WP_MV_URL . "/css/style.css"
             );
 
             wp_enqueue_style(
@@ -49,7 +49,7 @@ if (!class_exists('WP_MV_Metabox')) {
 
             wp_enqueue_script(
                 "wp-mv-metaboxs",
-                WP_MV_METABOXS_URL . "/js/script.js"
+                WP_MV_URL . "/js/script.js"
             );
         }
 

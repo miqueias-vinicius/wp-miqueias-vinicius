@@ -140,17 +140,17 @@ if (!class_exists('WP_MV_Taxonomy')) {
             $singular_name = $this->args['singular_name'] ?? $name;
 
             return [
-                'name'              => esc_html__($name, WP_MV_METABOXS_TEXT_DOMAIN),
-                'singular_name'     => esc_html__($singular_name, WP_MV_METABOXS_TEXT_DOMAIN),
-                'search_items'      => sprintf(esc_html__('Procurar %s', WP_MV_METABOXS_TEXT_DOMAIN), strtolower($name)),
-                'all_items'         => sprintf(esc_html__('Todos os %s', WP_MV_METABOXS_TEXT_DOMAIN), strtolower($name)),
-                'parent_item'       => sprintf(esc_html__('%s pai', WP_MV_METABOXS_TEXT_DOMAIN), $singular_name),
-                'parent_item_colon' => sprintf(esc_html__('%s pai:', WP_MV_METABOXS_TEXT_DOMAIN), $singular_name),
-                'edit_item'         => sprintf(esc_html__('Editar %s', WP_MV_METABOXS_TEXT_DOMAIN), $singular_name),
-                'update_item'       => sprintf(esc_html__('Atualizar %s', WP_MV_METABOXS_TEXT_DOMAIN), $singular_name),
-                'add_new_item'      => sprintf(esc_html__('Adicionar novo %s', WP_MV_METABOXS_TEXT_DOMAIN), $singular_name),
-                'new_item_name'     => sprintf(esc_html__('Novo nome de %s', WP_MV_METABOXS_TEXT_DOMAIN), $singular_name),
-                'menu_name'         => esc_html__($name, WP_MV_METABOXS_TEXT_DOMAIN),
+                'name'              => esc_html__($name, WP_MV_TEXT_DOMAIN),
+                'singular_name'     => esc_html__($singular_name, WP_MV_TEXT_DOMAIN),
+                'search_items'      => sprintf(esc_html__('Procurar %s', WP_MV_TEXT_DOMAIN), strtolower($name)),
+                'all_items'         => sprintf(esc_html__('Todos os %s', WP_MV_TEXT_DOMAIN), strtolower($name)),
+                'parent_item'       => sprintf(esc_html__('%s pai', WP_MV_TEXT_DOMAIN), $singular_name),
+                'parent_item_colon' => sprintf(esc_html__('%s pai:', WP_MV_TEXT_DOMAIN), $singular_name),
+                'edit_item'         => sprintf(esc_html__('Editar %s', WP_MV_TEXT_DOMAIN), $singular_name),
+                'update_item'       => sprintf(esc_html__('Atualizar %s', WP_MV_TEXT_DOMAIN), $singular_name),
+                'add_new_item'      => sprintf(esc_html__('Adicionar novo %s', WP_MV_TEXT_DOMAIN), $singular_name),
+                'new_item_name'     => sprintf(esc_html__('Novo nome de %s', WP_MV_TEXT_DOMAIN), $singular_name),
+                'menu_name'         => esc_html__($name, WP_MV_TEXT_DOMAIN),
             ];
         }
 
