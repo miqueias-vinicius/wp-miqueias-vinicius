@@ -191,7 +191,7 @@ if (!class_exists('WP_MV_Taxonomy')) {
 
             // Verifica se a taxonomia existe
             if (!taxonomy_exists($taxonomy)) {
-                return new WP_REST_Response('Taxonomia não existe.', 400);
+                return new WP_REST_Response('Taxonomia não foi encontrada ou não existe.', 400);
             }
 
             // Se o `term_id` for fornecido, tenta editar o termo existente
@@ -205,7 +205,7 @@ if (!class_exists('WP_MV_Taxonomy')) {
             $term = wp_insert_term($term_name, $taxonomy, $args);
 
             if (is_wp_error($term)) {
-                return new WP_REST_Response('Erro ao criar o termo.', 400);
+                return new WP_REST_Response('Erro ao criar o termo, verifique se o termo já existe.', 400);
             }
 
             return new WP_REST_Response('Termo criado com sucesso.', 201);
