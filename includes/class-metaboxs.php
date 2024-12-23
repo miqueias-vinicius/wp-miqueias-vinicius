@@ -445,7 +445,7 @@ if (!class_exists('WP_MV_Metabox')) {
         public function register_rest_routes()
         {
             register_rest_route(
-                "wp-mv-metaboxs/v1",
+                "wp-mv/v1",
                 "{$this->post_type}",
                 [
                     "methods" => "GET",
@@ -454,7 +454,7 @@ if (!class_exists('WP_MV_Metabox')) {
             );
 
             register_rest_route(
-                "wp-mv-metaboxs/v1",
+                "wp-mv/v1",
                 "{$this->post_type}",
                 [
                     "methods" => "POST",
