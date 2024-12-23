@@ -15,6 +15,8 @@ if (!class_exists('WP_MV_Taxonomy')) {
 
             add_action('init', [$this, 'register']);
 
+            add_action('rest_api_init', [$this, 'register_api_routes']);
+
             add_action('admin_enqueue_scripts', function () {
                 wp_enqueue_media();
             });
@@ -169,6 +171,44 @@ if (!class_exists('WP_MV_Taxonomy')) {
                 'show_in_rest'      => $this->args['show_in_rest'] ?? true,
                 'rewrite'           => ['slug' => $this->args['slug'] ?? $this->taxonomy],
             ];
+        }
+
+        public function register_api_routes()
+        {
+            register_rest_route('wp-mv/v1', '/taxonomies/terms/', [
+                'methods' => 'POST',
+                'callback' => [$this, 'api_add_terms']
+            ]);
+        }
+
+
+        public function api_add_terms(WP_REST_Request $request)
+        {
+            $taxonomy = $request->get_param('taxonomy');
+            $term_name = $request->get_param('term_name');
+            $description = $request->get_param('description');
+            $parent = $request->get_param('parent');
+
+            // Verifica se a taxonomia existe
+            if (!taxonomy_exists($taxonomy)) {
+                return new WP_REST_Response('Taxonomia não existe.', 400);
+            }
+
+            // Se o `term_id` for fornecido, tenta editar o termo existente
+            $args = [
+                'taxonomy' => $taxonomy,
+                'name' => $term_name,
+                'description' => $description,
+                'parent' => $parent,
+            ];
+
+            $term = wp_insert_term($term_name, $taxonomy, $args);
+
+            if (is_wp_error($term)) {
+                return new WP_REST_Response('Erro ao criar o termo.', 400);
+            }
+
+            return new WP_REST_Response('Termo criado com sucesso.', 201);
         }
     }
 }
