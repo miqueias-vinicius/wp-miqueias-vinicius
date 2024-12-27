@@ -46,7 +46,10 @@ if (!class_exists('WP_MV_Metabox')) {
 
             wp_enqueue_script(
                 "wp-mv-metaboxs",
-                WP_MV_URL . "/js/script.js"
+                WP_MV_URL . "/js/script.js",
+                array(),
+                time(),
+                array()
             );
         }
 
