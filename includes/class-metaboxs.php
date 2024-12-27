@@ -84,6 +84,7 @@ if (!class_exists('WP_MV_Metabox')) {
                 'type' => $args['type'],
                 'label' => $args['label'],
                 'options' => $args['options'] ?? [],
+                'fields' => $args['fields'] ?? [],
                 'sanitize_callback' => $args['sanitize_callback'] ?? 'sanitize_text_field',
             ];
         }
@@ -258,9 +259,8 @@ if (!class_exists('WP_MV_Metabox')) {
                             });
                         })(jQuery);
                     </script>
-<?php
+                <?php
                     break;
-
                 case "post_type":
                     if (!empty($field['options']['post_type'])) {
 
@@ -410,7 +410,86 @@ if (!class_exists('WP_MV_Metabox')) {
                         echo "</div>";
                     }
                     break;
+                case "multi":
+                    echo "<div class='group multi-field'>";
+                    echo "<label>{$field["label"]}</label>";
 
+                    echo "<button type='button' class='button add-multi-group'>Adicionar</button>";
+
+                    echo "<div class='multi-groups'>";
+                    if (!empty($value) && is_array($value)) {
+                        foreach ($value as $index => $group) {
+                            echo "<div class='multi-group' data-index='{$index}'>";
+                            foreach ($field['fields'] as $sub_field) {
+                                $sub_name = "{$name}[{$index}][{$sub_field['id']}]";
+                                $sub_value = isset($group[$sub_field['id']]) ? $group[$sub_field['id']] : '';
+                                $this->render_field($sub_name, $sub_field, $sub_value);
+                            }
+                            echo "<button type='button' class='button remove-multi-group'>Remover</button>";
+                            echo "</div>";
+                        }
+                    }
+                    echo "</div>";
+                    echo "</div>";
+
+                ?>
+                    <script>
+                        (function($) {
+                            $(document).ready(function() {
+                                $('.multi-field').each(function() {
+                                    const $multiField = $(this);
+                                    const $wrapper = $multiField.find('.multi-groups');
+                                    const $addButton = $multiField.find('.add-multi-group');
+
+                                    function getNextIndex() {
+                                        let nextIndex = 0;
+                                        $wrapper.find('.multi-group').each(function() {
+                                            const index = $(this).data('index');
+                                            if (index >= nextIndex) {
+                                                nextIndex = index + 1;
+                                            }
+                                        });
+                                        return nextIndex;
+                                    }
+
+                                    $addButton.on('click', function(e) {
+                                        e.preventDefault();
+
+                                        const index = getNextIndex();
+
+                                        let newGroup = '<div class="multi-group" data-index="' + index + '">';
+
+                                        <?php foreach ($field['fields'] as $sub_field) { ?>
+                                            newGroup += `
+                            <div class="group">
+                                <label for="${'<?php echo $name; ?>'}[${index}][<?php echo $sub_field['id']; ?>]">
+                                    <?php echo $sub_field['label']; ?>
+                                </label>
+                                <input type="<?php echo $sub_field['type']; ?>"
+                                       name="<?php echo $name; ?>[${index}][<?php echo $sub_field['id']; ?>]"
+                                       value="" />
+                            </div>
+                        `;
+                                        <?php } ?>
+
+                                        newGroup += `
+                        <button type="button" class="button remove-multi-group">Remover</button>
+                    </div>`;
+
+                                        $wrapper.append(newGroup);
+                                    });
+
+                                    $wrapper.on('click', '.remove-multi-group', function(e) {
+                                        e.preventDefault();
+                                        const $group = $(this).closest('.multi-group');
+                                        $group.remove();
+                                    });
+                                });
+                            });
+                        })(jQuery);
+                    </script>
+<?php
+                    break;
                 default:
                     echo "<div class='group'>";
                     echo "<label for='{$name}'>{$field["label"]}</label>";
@@ -435,14 +514,33 @@ if (!class_exists('WP_MV_Metabox')) {
             foreach ($metaboxs as $metabox) {
                 foreach ($metabox['items'] as $name => $field) {
                     if (isset($_POST[$name])) {
-                        $sanitize_callback = $field['sanitize_callback'] ?? 'sanitize_text_field';
+                        if ($field['type'] === 'multi' && is_array($_POST[$name])) {
+                            $multi_values = array_map(function ($group) use ($field) {
+                                $sanitized_group = [];
+                                foreach ($field['fields'] as $sub_field) {
+                                    $sub_field_id = $sub_field['id'];
+                                    $sanitize_sub_callback = $sub_field['sanitize_callback'] ?? 'sanitize_text_field';
+                                    if ($sub_field['type'] === 'editor') {
+                                        $sanitize_sub_callback = 'wp_kses_post';
+                                    }
+                                    $sanitized_group[$sub_field_id] = isset($group[$sub_field_id])
+                                        ? call_user_func($sanitize_sub_callback, $group[$sub_field_id])
+                                        : '';
+                                }
+                                return $sanitized_group;
+                            }, $_POST[$name]);
 
-                        if ($field['type'] === 'editor') {
-                            $sanitize_callback = 'wp_kses_post';
+                            update_post_meta($post_id, $name, $multi_values);
+                        } else {
+                            $sanitize_callback = $field['sanitize_callback'] ?? 'sanitize_text_field';
+                            if ($field['type'] === 'editor') {
+                                $sanitize_callback = 'wp_kses_post';
+                            }
+                            $value = call_user_func($sanitize_callback, $_POST[$name]);
+                            update_post_meta($post_id, $name, $value);
                         }
-
-                        $value = call_user_func($sanitize_callback, $_POST[$name]);
-                        update_post_meta($post_id, $name, $value);
+                    } else {
+                        delete_post_meta($post_id, $name);
                     }
                 }
             }
