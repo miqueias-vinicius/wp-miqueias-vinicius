@@ -82,6 +82,38 @@
   font-size: 14px;
 }
 
+.wp_mv_metaboxs__content .wp_mv_metaboxs__items .group img,
+.wp_mv_metaboxs__content .wp_mv_metaboxs__items .group video {
+  margin-bottom: 12px;
+  box-shadow: 0px 1px 3px 0px #ecf0f4;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+.wp_mv_metaboxs__content .wp_mv_metaboxs__items .group .button {
+  display: inline-flex;
+  justify-content: center;
+  transition: all;
+  cursor: pointer;
+  margin-right: 8px;
+  box-shadow: 0px 1px 3px 0px #ecf0f4;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  background-color: #ffffff;
+  padding: 0.5rem 0.75rem;
+  color: #1e293b;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  font-size: 14px;
+  line-height: 1.25rem;
+  text-align: center;
+  text-decoration-line: none;
+}
+
+.wp_mv_metaboxs__content .wp_mv_metaboxs__items .group .button:hover {
+  background-color: #f8fafc;
+}
+
 .wp_mv_metaboxs__content .wp_mv_metaboxs__items .group input,
 .wp_mv_metaboxs__content .wp_mv_metaboxs__items .group textarea {
   border-radius: 6px;
