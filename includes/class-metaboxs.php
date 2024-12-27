@@ -262,6 +262,82 @@ if (!class_exists('WP_MV_Metabox')) {
                     </script>
                 <?php
                     break;
+                case "gallery":
+                    echo "<div class='group gallery-group'>";
+                    echo "<label for='{$name}'>{$field['label']}</label>";
+                    echo "<div id='{$name}_gallery_wrapper' class='gallery-wrapper'>";
+
+                    if (!empty($value) && is_array($value)) {
+                        foreach ($value as $index => $url) {
+                            $file_extension = pathinfo($url, PATHINFO_EXTENSION);
+                            $video_extensions = ['mp4', 'mov', 'avi', 'mkv', 'flv'];
+                            echo "<div class='gallery-item' data-index='{$index}'>";
+                            if (in_array(strtolower($file_extension), $video_extensions)) {
+                                echo "<video width='131' height='131' controls>
+                                            <source src='" . esc_url($url) . "' type='video/" . esc_attr($file_extension) . "'>
+                                            Seu navegador não suporta o elemento de vídeo.
+                                          </video>";
+                            } else {
+                                echo "<img src='" . esc_url($url) . "' style='width: 131px; height: 131px; object-fit: cover;'>";
+                            }
+                            echo "<input type='hidden' name='{$name}[]' value='" . esc_attr($url) . "'>";
+                            echo "<button type='button' class='button remove-gallery-item'>Remover</button>";
+                            echo "</div>";
+                        }
+                    }
+
+                    echo "</div>";
+                    echo "<button type='button' id='{$name}_add_button' class='button button-primary'>Adicionar mídia</button>";
+                    echo "</div>";
+                ?>
+                    <script>
+                        (function($) {
+                            $(document).ready(function() {
+                                const galleryWrapper = $('#<?php echo $name; ?>_gallery_wrapper');
+                                const addButton = $('#<?php echo $name; ?>_add_button');
+
+                                addButton.on('click', function(e) {
+                                    e.preventDefault();
+                                    const mediaUploader = wp.media({
+                                        title: 'Selecione mídias',
+                                        button: {
+                                            text: 'Adicionar'
+                                        },
+                                        multiple: true
+                                    }).on('select', function() {
+                                        const attachments = mediaUploader.state().get('selection').toJSON();
+                                        attachments.forEach(function(attachment) {
+                                            const url = attachment.url;
+                                            const file_extension = url.split('.').pop().toLowerCase();
+                                            const index = galleryWrapper.children('.gallery-item').length;
+
+                                            let galleryItem = `<div class="gallery-item" data-index="${index}">`;
+                                            if (['mp4', 'mov', 'avi', 'mkv', 'flv'].includes(file_extension)) {
+                                                galleryItem += `<video width='131' height='131' controls>
+                                                                        <source src="${url}" type="video/${file_extension}">
+                                                                        Seu navegador não suporta o elemento de vídeo.
+                                                                    </video>`;
+                                            } else {
+                                                galleryItem += `<img src="${url}" style="width: 131px; height: 131px; object-fit: cover;">`;
+                                            }
+                                            galleryItem += `<input type="hidden" name="<?php echo $name; ?>[]" value="${url}">`;
+                                            galleryItem += `<button type="button" class="button remove-gallery-item">Remover</button>`;
+                                            galleryItem += `</div>`;
+
+                                            galleryWrapper.append(galleryItem);
+                                        });
+                                    }).open();
+                                });
+
+                                galleryWrapper.on('click', '.remove-gallery-item', function(e) {
+                                    e.preventDefault();
+                                    $(this).closest('.gallery-item').remove();
+                                });
+                            });
+                        })(jQuery);
+                    </script>
+                <?php
+                    break;
                 case "post_type":
                     if (!empty($field['options']['post_type'])) {
 
@@ -532,6 +608,9 @@ if (!class_exists('WP_MV_Metabox')) {
                             }, $_POST[$name]);
 
                             update_post_meta($post_id, $name, $multi_values);
+                        } elseif ($field['type'] === 'gallery' && is_array($_POST[$name])) {
+                            $gallery_values = array_map('esc_url_raw', $_POST[$name]);
+                            update_post_meta($post_id, $name, $gallery_values);
                         } else {
                             $sanitize_callback = $field['sanitize_callback'] ?? 'sanitize_text_field';
                             if ($field['type'] === 'editor') {
@@ -546,7 +625,6 @@ if (!class_exists('WP_MV_Metabox')) {
                 }
             }
         }
-
 
         public function register_rest_routes()
         {

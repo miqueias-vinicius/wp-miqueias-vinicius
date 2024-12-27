@@ -156,3 +156,21 @@
   .remove-multi-group {
   margin-top: 12px;
 }
+
+/* Gallery Group */
+
+.wp_mv_metaboxs__content .wp_mv_metaboxs__items .group.gallery-group > div {
+  display: grid;
+  grid-template-columns: 131px 131px 131px 131px;
+  gap: 12px;
+}
+
+.wp_mv_metaboxs__content
+  .wp_mv_metaboxs__items
+  .group.gallery-group
+  > div
+  .gallery-item
+  .button {
+  display: block;
+  margin: 0 auto;
+}
