@@ -3,6 +3,15 @@
 if (!class_exists('WP_MV_Metabox')) {
     class WP_MV_Metabox
     {
+        /**
+         * Registra um metabox com grupos e campos.
+         *
+         * @param string $id ID único do metabox.
+         * @param string $title Título do metabox.
+         * @param string $post_type Tipo de post que o metabox será exibido.
+         * @param array $groups Cadastro de grupos internos do metabox.
+         */
+
         private $id;
         private $title;
         private $post_type;
@@ -58,6 +67,18 @@ if (!class_exists('WP_MV_Metabox')) {
                 "high"
             );
         }
+
+        /**
+         * Registra um grupo dentro do metabox.
+         *
+         * @param string $id ID do metabox.
+         * @param array $args {
+         *     Parâmetros para configurar o grupo.
+         *
+         *     @type string $label Título do grupo. Obrigatório.
+         *     @type string $icon  Ícone do grupo. Opcional.
+         * }
+         */
 
         public function add_group($id, $args = array())
         {
