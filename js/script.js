@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var tabs = document.querySelectorAll(".wp_mv_metaboxs ul li a");
-  var contents = document.querySelectorAll(".wp_mv_metaboxs > div");
+  var tabs = document.querySelectorAll(".wp_mv_metaboxs .wp_mv_metaboxs__sidebar .wp_mv_metaboxs__sidebar__item");
+  var contents = document.querySelectorAll(".wp_mv_metaboxs .wp_mv_metaboxs__content > div");
 
   tabs.forEach(function (tab) {
     tab.addEventListener("click", function (e) {
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
         tab.classList.remove("active");
       });
 
-      var target = document.querySelector(tab.getAttribute("href"));
+      var target = document.querySelector(tab.getAttribute("data-tab"));
       target.style.display = "";
 
       tab.classList.add("active");

@@ -97,30 +97,34 @@ if (!class_exists('WP_MV_Metabox')) {
             echo "<style> #{$this->id} .inside { padding: 0; margin: 0; } </style>";
 ?>
             <div class="wp_mv_metaboxs">
-                <ul>
+                <ul class="wp_mv_metaboxs__sidebar">
                     <?php foreach ($metaboxs as $metabox => $attr): ?>
-                        <li>
-                            <a class="wp-mv-tab" href="#<?php echo esc_attr($metabox); ?>">
+                        <li class="wp_mv_metaboxs__sidebar__item" data-tab="#<?php echo esc_attr($metabox); ?>">
+                            <a class="wp-mv-tab" href="#">
+                                <span class="wp-mv-tab-icon material-symbols-outlined"><?php echo $attr['icon']; ?></span>
                                 <div class="wp-mv-tab-info">
                                     <span class="wp-mv-tab-label"><?php echo esc_html($attr["label"]); ?></span>
                                     <span class="wp-mv-tab-description"><?php echo (array_key_exists("description", $attr)) ?? esc_html($attr["description"]); ?></span>
                                 </div>
-                                <span class="wp-mv-tab-icon material-symbols-outlined"><?php echo $attr['icon']; ?></span>
                             </a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
-                <?php foreach ($metaboxs as $metabox => $attr): ?>
-                    <div id="<?php echo esc_attr($metabox); ?>">
-                        <div class="wp-mv-tab-header">
-                            <h2 class="wp-mv-tab-title"><?php echo esc_html($attr["label"]); ?></h2>
+                <div class="wp_mv_metaboxs__content">
+                    <?php foreach ($metaboxs as $metabox => $attr): ?>
+                        <div class="wp_mv_metaboxs__tab" id="<?php echo esc_attr($metabox); ?>">
+                            <div class="wp_mv_metaboxs__header">
+                                <h2 class="wp_mv_metaboxs__title"><?php echo esc_html($attr["label"]); ?></h2>
+                            </div>
+                            <div class="wp_mv_metaboxs__items">
+                                <?php foreach ($attr["items"] as $name => $field): ?>
+                                    <?php $value = get_post_meta($post->ID, $name, true); ?>
+                                    <?php $this->render_field($name, $field, $value); ?>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
-                        <?php foreach ($attr["items"] as $name => $field): ?>
-                            <?php $value = get_post_meta($post->ID, $name, true); ?>
-                            <?php $this->render_field($name, $field, $value); ?>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </div>
             </div>
             <?php
         }
