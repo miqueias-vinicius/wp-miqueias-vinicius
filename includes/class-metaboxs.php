@@ -84,6 +84,7 @@ if (!class_exists('WP_MV_Metabox')) {
                 'type' => $args['type'],
                 'label' => $args['label'],
                 'options' => $args['options'] ?? [],
+                'mask' => $args['mask'] ?? '',
                 'fields' => $args['fields'] ?? [],
                 'sanitize_callback' => $args['sanitize_callback'] ?? 'sanitize_text_field',
             ];
@@ -425,7 +426,7 @@ if (!class_exists('WP_MV_Metabox')) {
                                 $sub_value = isset($group[$sub_field['id']]) ? $group[$sub_field['id']] : '';
                                 $this->render_field($sub_name, $sub_field, $sub_value);
                             }
-                            echo "<button type='button' class='button remove-multi-group'>Remover</button>";
+                            echo "<button type='button' class='button remove-multi-group'>Excluir</button>";
                             echo "</div>";
                         }
                     }

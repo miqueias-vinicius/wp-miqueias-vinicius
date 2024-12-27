@@ -1,6 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var tabs = document.querySelectorAll(".wp_mv_metaboxs .wp_mv_metaboxs__sidebar .wp_mv_metaboxs__sidebar__item");
-  var contents = document.querySelectorAll(".wp_mv_metaboxs .wp_mv_metaboxs__content > div");
+  var tabs = document.querySelectorAll(
+    ".wp_mv_metaboxs .wp_mv_metaboxs__sidebar .wp_mv_metaboxs__sidebar__item",
+  );
+  var contents = document.querySelectorAll(
+    ".wp_mv_metaboxs .wp_mv_metaboxs__content > div",
+  );
 
   tabs.forEach(function (tab) {
     tab.addEventListener("click", function (e) {
