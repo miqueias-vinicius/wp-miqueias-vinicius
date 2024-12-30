@@ -15,6 +15,7 @@ if (!class_exists('WP_MV_RenderFields')) {
         {
             $methods = [
                 'default' => 'render_default_field',
+                'checkbox' => 'render_checkbox_field',
                 'select' => 'render_select_field',
                 'editor' => 'render_editor_field',
                 'multi' => 'render_multi_field',
@@ -39,6 +40,16 @@ if (!class_exists('WP_MV_RenderFields')) {
             echo "<div class='group'>";
             echo "<label for='{$name}'>{$field["label"]}</label>";
             echo "<input id='{$name}' type='{$field["type"]}' name='{$name}' value='" . esc_attr($value) . "' />";
+            echo "</div>";
+        }
+
+        private static function render_checkbox_field($name, $field, $value)
+        {
+            echo "<div class='group'>";
+            echo "<label for='{$name}'>";
+            echo "<input id='{$name}' type='checkbox' name='{$name}' value='1' " . checked(1, $value, false) . " />";
+            echo "{$field['label']}";
+            echo "</label>";
             echo "</div>";
         }
 
