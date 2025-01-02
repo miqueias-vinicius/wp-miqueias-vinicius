@@ -4,7 +4,7 @@
 Plugin Name: WP Miqueias Vinicius
 Plugin URI: https://github.com/miqueias-vinicius/wp-miqueias-vinicius/
 Description: Gerenciamento de tipos de posts, metaboxs, taxonomias e mais.
-Version: 3.0.13
+Version: 3.0.14
 Requires at least: 5.0
 Requires PHP: 5.2
 Author: Miqueias Vinicius

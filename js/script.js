@@ -2,30 +2,35 @@ document.addEventListener("DOMContentLoaded", function () {
   var tabs = document.querySelectorAll(
     ".wp_mv_metaboxs .wp_mv_metaboxs__sidebar .wp_mv_metaboxs__sidebar__item",
   );
+
   var contents = document.querySelectorAll(
     ".wp_mv_metaboxs .wp_mv_metaboxs__content > div",
   );
 
-  tabs.forEach(function (tab) {
-    tab.addEventListener("click", function (e) {
-      e.preventDefault();
+  if (tabs.length > 0) {
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function (e) {
+        e.preventDefault();
 
-      contents.forEach(function (content) {
-        content.style.display = "none";
+        contents.forEach(function (content) {
+          content.style.display = "none";
+        });
+
+        tabs.forEach(function (tab) {
+          tab.classList.remove("active");
+        });
+
+        var target = document.querySelector(tab.getAttribute("data-tab"));
+        if (target) {
+          target.style.display = "";
+        }
+
+        tab.classList.add("active");
       });
-
-      tabs.forEach(function (tab) {
-        tab.classList.remove("active");
-      });
-
-      var target = document.querySelector(tab.getAttribute("data-tab"));
-      target.style.display = "";
-
-      tab.classList.add("active");
     });
-  });
 
-  tabs[0].click();
+    tabs[0].click();
+  }
 });
 
 // Telefone
