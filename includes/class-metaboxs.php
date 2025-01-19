@@ -31,21 +31,15 @@ if (!class_exists('WP_MV_Metabox')) {
 
         public function assets()
         {
-            wp_enqueue_style("wp-mv-metaboxs", WP_MV_URL . "css/style.css", array(), time(), 'all');
+            wp_enqueue_style("wp-mv-metaboxs", WP_MV_URL . "css/style.css", array(), time(), "all");
+
+            wp_enqueue_script("wp-mv-metaboxs", WP_MV_URL . "js/script.js", array(), time(), array());
+
+            wp_enqueue_style("wp-mv-metaboxs-selectize", WP_MV_URL . "css/selectize.default.min.css", array(), time(), "all");
+
+            wp_enqueue_script("wp-mv-metaboxs-selectize", WP_MV_URL . "js/selectize.min.js", array('jquery'), null, true);
 
             wp_enqueue_style("wp-mv-metaboxs-icons", "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined");
-
-            wp_enqueue_style("wp-mv-metaboxs-selectize", "https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css");
-
-            wp_enqueue_script(
-                "wp-mv-metaboxs-selectize",
-                "https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js",
-                array('jquery'),
-                null,
-                true
-            );
-
-            wp_enqueue_script("wp-mv-metaboxs", WP_MV_URL . "/js/script.js", array(), time(), array());
         }
 
         public function add_meta_box()
