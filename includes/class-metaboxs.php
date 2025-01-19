@@ -184,7 +184,9 @@ if (!class_exists('WP_MV_Metabox')) {
                         } else {
                             $sanitize_callback = $field['sanitize_callback'] ?? 'sanitize_text_field';
                             if ($field['type'] === 'editor') {
-                                $sanitize_callback = 'wp_kses_post';
+                                $sanitize_callback = function ($content) {
+                                    return wp_kses_post(wpautop($content));
+                                };
                             }
                             $value = call_user_func($sanitize_callback, $_POST[$name]);
                             update_post_meta($post_id, $name, $value);
@@ -222,7 +224,7 @@ if (!class_exists('WP_MV_Metabox')) {
             $post_id = $request->get_param('post_id');
 
             if (!get_post($post_id)) {
-                return new WP_REST_Response(['error' => 'O ID do post informado é inválido ou não existe'], 403);
+                return new WP_REST_Response(['error' => 'O ID do post informado é inválido ou não existe.'], 403);
             }
 
             $metabox_data = [];
@@ -247,7 +249,7 @@ if (!class_exists('WP_MV_Metabox')) {
             $updated_data = $request->get_json_params();
 
             if (!get_post($post_id)) {
-                return new WP_REST_Response(['error' => 'O ID do post informado é inválido ou não existe'], 403);
+                return new WP_REST_Response(['error' => 'O ID do post informado é inválido ou não existe.'], 403);
             }
 
             $metaboxs = $this->metaboxs();

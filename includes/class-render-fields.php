@@ -87,14 +87,21 @@ if (!class_exists('WP_MV_RenderFields')) {
         {
             echo "<div class='group'>";
             echo "<label for='{$name}'>{$field["label"]}</label>";
+
+            $editor_id = sanitize_key($name);
+
+            $value = wpautop($value);
+
+            // Configurações do editor
             $editor_settings = [
                 'textarea_name' => $name,
                 'media_buttons' => false,
                 'textarea_rows' => 10,
                 'teeny'         => true,
-                'quicktags'     => true
+                'quicktags'     => true,
             ];
-            wp_editor($value, $name, $editor_settings);
+
+            wp_editor($value, $editor_id, $editor_settings);
             echo "</div>";
         }
 
