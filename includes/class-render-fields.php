@@ -96,7 +96,7 @@ if (!class_exists('WP_MV_RenderFields')) {
             $editor_settings = [
                 'textarea_name' => $name,
                 'media_buttons' => false,
-                'textarea_rows' => 10,
+                'textarea_rows' => 15,
                 'teeny'         => true,
                 'quicktags'     => true,
             ];
