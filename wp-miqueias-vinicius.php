@@ -1,17 +1,22 @@
 <?php
 
-/* ==================================================================
-Plugin Name: WP Miqueias Vinicius
-Plugin URI: https://github.com/miqueias-vinicius/wp-miqueias-vinicius/
-Description: Gerenciamento de tipos de posts, metaboxs, taxonomias e mais.
-Version: 3.0.17
-Requires at least: 5.0
-Requires PHP: 5.2
-Author: Miqueias Vinicius
-Author URI: https://miqueiasvinicius.com/
-License: software proprietário
-Text Domain: wp-miqueias-vinicius
-================================================================== */
+/**
+ * @since 1.0.0
+ * @version 3.0.17
+ * @package \WP-Miqueias-Vinicius
+ * @author Miqueias Vinicius <contato.miqueiasvinicius@gmail.com>
+ * @copyright 2025 Miqueias Vinicius <miqueiasvinicius.com>
+ * Plugin Name: WP Miqueias Vinicius
+ * Plugin URI: https://github.com/miqueias-vinicius/wp-miqueias-vinicius/
+ * Description: Gerenciamento de tipos de posts, metaboxs, taxonomias e mais.
+ * Version: 3.0.17
+ * Requires at least: 5.0
+ * Requires PHP: 5.2
+ * Author: Miqueias Vinicius
+ * Author URI: https://miqueiasvinicius.com/
+ * License: software proprietário
+ * Text Domain: wp-miqueias-vinicius
+ */
 
 if (!defined('ABSPATH')) {
     die('Invalid request.');
