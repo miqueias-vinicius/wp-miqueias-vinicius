@@ -155,38 +155,46 @@ if (!class_exists('WP_MV_Metabox')) {
             foreach ($metaboxs as $metabox) {
                 foreach ($metabox['items'] as $name => $field) {
                     if (isset($_POST[$name])) {
-                        if ($field['type'] === 'multi' && is_array($_POST[$name])) {
-                            $multi_values = array_map(function ($group) use ($field) {
-                                $sanitized_group = [];
-                                foreach ($field['fields'] as $sub_field) {
-                                    $sub_field_id = $sub_field['id'];
-                                    $sanitize_sub_callback = $sub_field['sanitize_callback'] ?? 'sanitize_text_field';
-                                    if ($sub_field['type'] === 'editor') {
-                                        $sanitize_sub_callback = 'wp_kses_post';
+                        switch ($field['type']) {
+                            case 'multi' && is_array($_POST[$name]):
+                                $multi_values = array_map(function ($group) use ($field) {
+                                    $sanitized_group = [];
+                                    foreach ($field['fields'] as $sub_field) {
+                                        $sub_field_id = $sub_field['id'];
+                                        $sanitize_sub_callback = $sub_field['sanitize_callback'] ?? 'sanitize_text_field';
+                                        if ($sub_field['type'] === 'editor') {
+                                            $sanitize_sub_callback = 'wp_kses_post';
+                                        }
+                                        $sanitized_group[$sub_field_id] = isset($group[$sub_field_id])
+                                            ? call_user_func($sanitize_sub_callback, $group[$sub_field_id])
+                                            : '';
                                     }
-                                    $sanitized_group[$sub_field_id] = isset($group[$sub_field_id])
-                                        ? call_user_func($sanitize_sub_callback, $group[$sub_field_id])
-                                        : '';
-                                }
-                                return $sanitized_group;
-                            }, $_POST[$name]);
+                                    return $sanitized_group;
+                                }, $_POST[$name]);
 
-                            update_post_meta($post_id, $name, $multi_values);
-                        } elseif ($field['type'] === 'gallery' && is_array($_POST[$name])) {
-                            $gallery_values = array_map('esc_url_raw', $_POST[$name]);
-                            update_post_meta($post_id, $name, $gallery_values);
-                        } else {
-                            $sanitize_callback = $field['sanitize_callback'] ?? 'sanitize_text_field';
-                            if ($field['type'] === 'editor') {
+                                update_post_meta($post_id, $name, $multi_values);
+                                break;
+                            case 'multi_select':
+                                update_post_meta($post_id, $name, $_POST[$name]);
+                                break;
+                            case 'gallery' && is_array($_POST[$name]):
+                                $gallery_values = array_map('esc_url_raw', $_POST[$name]);
+                                update_post_meta($post_id, $name, $gallery_values);
+                                break;
+                            case 'editor':
                                 $sanitize_callback = function ($content) {
                                     return wp_kses_post(wpautop($content));
                                 };
-                            }
-                            $value = call_user_func($sanitize_callback, $_POST[$name]);
-                            update_post_meta($post_id, $name, $value);
+
+                                $value = call_user_func($sanitize_callback, $_POST[$name]);
+                                update_post_meta($post_id, $name, $value);
+                                break;
+                            default:
+                                $sanitize_callback = $field['sanitize_callback'] ?? 'sanitize_text_field';
+                                $value = call_user_func($sanitize_callback, $_POST[$name]);
+                                update_post_meta($post_id, $name, $value);
+                                break;
                         }
-                    } else {
-                        delete_post_meta($post_id, $name);
                     }
                 }
             }
