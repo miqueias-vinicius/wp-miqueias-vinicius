@@ -86,7 +86,9 @@ if (!class_exists('WP_MV_RenderFields')) {
         private static function render_query_posts_field($name, $field, $value)
         {
 
-            $post_id = 189;
+            global $post;
+
+            $post_id = $post->ID;
 
             // Obtenha os IDs dos posts relacionados já salvos e certifique-se de que é um array
             $related_posts = get_post_meta($post_id, $name, true);
