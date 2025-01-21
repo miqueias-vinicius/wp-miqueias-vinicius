@@ -47,7 +47,7 @@ if (!class_exists('WP_MV_RenderFields')) {
         {
             echo "<div class='group'>";
             echo "<label for='{$name}'>";
-            echo "<input id='{$name}' type='checkbox' name='{$name}' value='1' " . checked(1, $value, false) . " />";
+            echo "<input id='{$name}' type='checkbox' name='{$name}' value='1' " . checked($value, '1') . " />";
             echo "{$field['label']}";
             echo "</label>";
             echo "</div>";
