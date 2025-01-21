@@ -85,50 +85,57 @@ if (!class_exists('WP_MV_RenderFields')) {
          */
         private static function render_query_posts_field($name, $field, $value)
         {
-
             global $post;
 
             $post_id = $post->ID;
 
-            // Obtenha os IDs dos posts relacionados já salvos e certifique-se de que é um array
-            $related_posts = get_post_meta($post_id, $name, true);
-            if (!is_array($related_posts)) {
-                $related_posts = []; // Garantir que seja sempre um array
+            $current_value = get_post_meta($post_id, $name, true);
+
+            if (!is_array($current_value)) {
+                $current_value = [];
             }
 
-            // Query para obter todos os posts publicados
-            $posts = get_posts([
-                'post_type' => 'post',
-                'post_status' => 'publish',
-                'posts_per_page' => -1,
-                'exclude' => [$post_id], // Excluir o post atual dinamicamente
-            ]);
+            if (empty($field['args']) || !isset($field['args'])) {
+                echo "<em>Argumentos de query não foram fornecidas.</em>";
+                return;
+            }
 
-            // Criação do HTML
-?>
-            <p><?php echo esc_html($field['label']); ?></p>
-            <select
-                name="<?php echo esc_attr($name); ?>[]"
-                id="<?php echo esc_attr($name); ?>"
-                multiple
-                style="width: 100%;">
-                <?php foreach ($posts as $related_post) : ?>
-                    <?php $selected = in_array($related_post->ID, $related_posts) ? 'selected' : ''; ?>
-                    <option value="<?php echo esc_attr($related_post->ID); ?>" <?php echo $selected; ?>>
-                        <?php echo esc_html($related_post->post_title); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-            <script>
-                jQuery(document).ready(function($) {
-                    $('#<?php echo esc_attr($name); ?>').selectize({
-                        create: false, // Desativa a criação de novos itens
-                        sortField: 'text', // Ordena os itens por texto
-                        maxItems: null, // Permite múltiplas seleções
+            if (!is_array($field['args'])) {
+                echo "<em>Os arguemntos da query precisam ser um array.</em>";
+                return;
+            }
+
+            $args = $field['args'];
+            $query = new WP_Query($args);
+
+            echo "<div class='group'>";
+            echo "<label for='{$name}'>{$field['label']}</label>";
+            if ($query->have_posts()) {
+                echo '<select name="' . esc_attr($name) . '[]" id="' . esc_attr($name) . '" multiple style="width: 100%;">';
+                while ($query->have_posts()) {
+                    $query->the_post();
+                    $selected = in_array(get_the_ID(), $current_value) ? 'selected' : '';
+                    echo '<option value="' . esc_attr(get_the_ID()) . '" ' . $selected . '>';
+                    echo esc_html(get_the_title(get_the_ID()));
+                    echo '</option>';
+                }
+                echo '</select>';
+
+
+                echo '<script>
+                    jQuery(document).ready(function($) {
+                        $("#' . esc_attr($name) . '").selectize({
+                            create: false, 
+                            sortField: "text",
+                            maxItems: null
+                        });
                     });
-                });
-            </script>
-        <?php
+                </script>';
+            } else {
+                echo "<em>Nenhum post encontrado.</em>";
+                return;
+            }
+            echo "</div>";
         }
 
 
@@ -182,7 +189,7 @@ if (!class_exists('WP_MV_RenderFields')) {
             echo "<button type='button' id='{$name}_remove_button' class='button' style='display: " . ($value ? 'inline' : 'none') . ";'>Excluir</button>";
             echo "</div>";
             echo "</div>";
-        ?>
+?>
             <script>
                 (function($) {
                     $(document).ready(function() {

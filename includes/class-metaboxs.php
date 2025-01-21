@@ -93,6 +93,7 @@ if (!class_exists('WP_MV_Metabox')) {
                 'options' => $args['options'] ?? [],
                 'mask' => $args['mask'] ?? '',
                 'fields' => $args['fields'] ?? [],
+                'args' => $args['args'] ?? [],
                 'sanitize_callback' => $args['sanitize_callback'] ?? 'sanitize_text_field',
             ];
         }
