@@ -1,5 +1,11 @@
 <?php
 
+// add_action('save_post', function ($post_id) {
+//     if (isset($_POST['cliente'])) {
+//         error_log(print_r($_POST['cliente'], true)); // Registrar no log para verificar
+//     }
+// });
+
 if (!class_exists('WP_MV_Metabox')) {
     class WP_MV_Metabox
     {
@@ -156,30 +162,36 @@ if (!class_exists('WP_MV_Metabox')) {
                 foreach ($metabox['items'] as $name => $field) {
                     if (isset($_POST[$name])) {
                         switch ($field['type']) {
-                            case 'multi' && is_array($_POST[$name]):
-                                $multi_values = array_map(function ($group) use ($field) {
-                                    $sanitized_group = [];
-                                    foreach ($field['fields'] as $sub_field) {
-                                        $sub_field_id = $sub_field['id'];
-                                        $sanitize_sub_callback = $sub_field['sanitize_callback'] ?? 'sanitize_text_field';
-                                        if ($sub_field['type'] === 'editor') {
-                                            $sanitize_sub_callback = 'wp_kses_post';
+                            case 'multi':
+                                if (is_array($_POST[$name])) {
+                                    $multi_values = array_map(function ($group) use ($field) {
+                                        $sanitized_group = [];
+                                        foreach ($field['fields'] as $sub_field) {
+                                            $sub_field_id = $sub_field['id'];
+                                            $sanitize_sub_callback = $sub_field['sanitize_callback'] ?? 'sanitize_text_field';
+                                            if ($sub_field['type'] === 'editor') {
+                                                $sanitize_sub_callback = 'wp_kses_post';
+                                            }
+                                            $sanitized_group[$sub_field_id] = isset($group[$sub_field_id])
+                                                ? call_user_func($sanitize_sub_callback, $group[$sub_field_id])
+                                                : '';
                                         }
-                                        $sanitized_group[$sub_field_id] = isset($group[$sub_field_id])
-                                            ? call_user_func($sanitize_sub_callback, $group[$sub_field_id])
-                                            : '';
-                                    }
-                                    return $sanitized_group;
-                                }, $_POST[$name]);
+                                        return $sanitized_group;
+                                    }, $_POST[$name]);
 
-                                update_post_meta($post_id, $name, $multi_values);
+                                    update_post_meta($post_id, $name, $multi_values);
+                                }
                                 break;
-                            case 'multi_select':
-                                update_post_meta($post_id, $name, $_POST[$name]);
+                            case 'query_posts':
+                                if (isset($_POST[$name])) {
+                                    update_post_meta($post_id, $name, $_POST[$name]);
+                                }
                                 break;
-                            case 'gallery' && is_array($_POST[$name]):
-                                $gallery_values = array_map('esc_url_raw', $_POST[$name]);
-                                update_post_meta($post_id, $name, $gallery_values);
+                            case 'gallery':
+                                if (is_array($_POST[$name])) {
+                                    $gallery_values = array_map('esc_url_raw', $_POST[$name]);
+                                    update_post_meta($post_id, $name, $gallery_values);
+                                }
                                 break;
                             case 'editor':
                                 $sanitize_callback = function ($content) {
@@ -190,9 +202,7 @@ if (!class_exists('WP_MV_Metabox')) {
                                 update_post_meta($post_id, $name, $value);
                                 break;
                             default:
-                                $sanitize_callback = $field['sanitize_callback'] ?? 'sanitize_text_field';
-                                $value = call_user_func($sanitize_callback, $_POST[$name]);
-                                update_post_meta($post_id, $name, $value);
+                                update_post_meta($post_id, $name, $_POST[$name]);
                                 break;
                         }
                     }

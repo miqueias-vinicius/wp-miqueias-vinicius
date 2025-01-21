@@ -1,6 +1,5 @@
 <?php
 
-
 if (!class_exists('WP_MV_RenderFields')) {
     class WP_MV_RenderFields
     {
@@ -17,6 +16,7 @@ if (!class_exists('WP_MV_RenderFields')) {
                 'default' => 'render_default_field',
                 'checkbox' => 'render_checkbox_field',
                 'select' => 'render_select_field',
+                'query_posts' => 'render_query_posts_field',
                 'editor' => 'render_editor_field',
                 'multi' => 'render_multi_field',
                 'media' => 'render_media_field',
@@ -81,6 +81,56 @@ if (!class_exists('WP_MV_RenderFields')) {
         }
 
         /**
+         * Renderiza um campo do tipo query de seleção.
+         */
+        private static function render_query_posts_field($name, $field, $value)
+        {
+
+            $post_id = 189;
+
+            // Obtenha os IDs dos posts relacionados já salvos e certifique-se de que é um array
+            $related_posts = get_post_meta($post_id, $name, true);
+            if (!is_array($related_posts)) {
+                $related_posts = []; // Garantir que seja sempre um array
+            }
+
+            // Query para obter todos os posts publicados
+            $posts = get_posts([
+                'post_type' => 'post',
+                'post_status' => 'publish',
+                'posts_per_page' => -1,
+                'exclude' => [$post_id], // Excluir o post atual dinamicamente
+            ]);
+
+            // Criação do HTML
+?>
+            <p><?php echo esc_html($field['label']); ?></p>
+            <select
+                name="<?php echo esc_attr($name); ?>[]"
+                id="<?php echo esc_attr($name); ?>"
+                multiple
+                style="width: 100%;">
+                <?php foreach ($posts as $related_post) : ?>
+                    <?php $selected = in_array($related_post->ID, $related_posts) ? 'selected' : ''; ?>
+                    <option value="<?php echo esc_attr($related_post->ID); ?>" <?php echo $selected; ?>>
+                        <?php echo esc_html($related_post->post_title); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <script>
+                jQuery(document).ready(function($) {
+                    $('#<?php echo esc_attr($name); ?>').selectize({
+                        create: false, // Desativa a criação de novos itens
+                        sortField: 'text', // Ordena os itens por texto
+                        maxItems: null, // Permite múltiplas seleções
+                    });
+                });
+            </script>
+        <?php
+        }
+
+
+        /**
          * Renderiza um campo do tipo editor.
          */
         private static function render_editor_field($name, $field, $value)
@@ -130,7 +180,7 @@ if (!class_exists('WP_MV_RenderFields')) {
             echo "<button type='button' id='{$name}_remove_button' class='button' style='display: " . ($value ? 'inline' : 'none') . ";'>Excluir</button>";
             echo "</div>";
             echo "</div>";
-?>
+        ?>
             <script>
                 (function($) {
                     $(document).ready(function() {
