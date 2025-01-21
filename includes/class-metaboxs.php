@@ -207,13 +207,6 @@ if (!class_exists('WP_MV_Metabox')) {
                                     update_post_meta($post_id, $name, $multi_values);
                                 }
                                 break;
-                            case 'checkbox':
-                                if (isset($_POST[$name])) {
-                                    update_post_meta($post_id, $name, '1');
-                                } else {
-                                    delete_post_meta($post_id, $name);
-                                }
-                                break;
                             case 'query_posts':
                                 if (isset($_POST[$name])) {
                                     update_post_meta($post_id, $name, $_POST[$name]);
@@ -234,7 +227,11 @@ if (!class_exists('WP_MV_Metabox')) {
                                 update_post_meta($post_id, $name, $value);
                                 break;
                             default:
-                                update_post_meta($post_id, $name, $_POST[$name]);
+                                if (isset($_POST[$name])) {
+                                    update_post_meta($post_id, $name, $_POST[$name]);
+                                } else {
+                                    delete_post_meta($post_id, $name);
+                                }
                                 break;
                         }
                     }
