@@ -107,20 +107,41 @@ if (!class_exists('WP_MV_Metabox')) {
         {
             $metaboxs = $this->metaboxs();
 
-            echo "<style> #{$this->id} .inside { padding: 0; margin: 0; } </style>";
 ?>
             <div class="wp_mv_metaboxs">
                 <ul class="wp_mv_metaboxs__sidebar">
-                    <?php foreach ($metaboxs as $metabox => $attr): ?>
-                        <li class="wp_mv_metaboxs__sidebar__item" data-tab="#<?php echo esc_attr($metabox); ?>">
-                            <a class="wp-mv-tab" href="#">
-                                <span class="wp-mv-tab-icon material-symbols-outlined"><?php echo $attr['icon']; ?></span>
-                                <div class="wp-mv-tab-info">
-                                    <span class="wp-mv-tab-label"><?php echo esc_html($attr["label"]); ?></span>
-                                    <span class="wp-mv-tab-description"><?php echo (array_key_exists("description", $attr)) ?? esc_html($attr["description"]); ?></span>
-                                </div>
-                            </a>
-                        </li>
+                    <?php foreach ($metaboxs as $metabox_key => $metabox_attr): ?>
+                        <?php if (!isset($metabox_attr['parent'])): ?>
+                            <li class="wp_mv_metaboxs__sidebar__item" data-tab="#<?php echo esc_attr($metabox_key); ?>">
+                                <a class="wp-mv-tab" href="#">
+                                    <span class="wp-mv-tab-icon material-symbols-outlined"><?php echo esc_html($metabox_attr['icon']); ?></span>
+                                    <div class="wp-mv-tab-info">
+                                        <span class="wp-mv-tab-label"><?php echo esc_html($metabox_attr["label"]); ?></span>
+                                        <span class="wp-mv-tab-description">
+                                            <?php echo array_key_exists("description", $metabox_attr) ? esc_html($metabox_attr["description"]) : ''; ?>
+                                        </span>
+                                    </div>
+                                </a>
+                                <!-- Sub-itens do metabox -->
+                                <?php foreach ($metaboxs as $sub_metabox_key => $sub_metabox_attr): ?>
+                                    <?php if (isset($sub_metabox_attr['parent']) && $sub_metabox_attr['parent'] === $metabox_key): ?>
+                                        <ul class="wp_mv_metaboxs__sidebar__item__child">
+                                            <li class="wp_mv_metaboxs__sidebar__item" data-tab="#<?php echo esc_attr($sub_metabox_key); ?>">
+                                                <a class="wp-mv-tab" href="#">
+                                                    <span class="wp-mv-tab-icon material-symbols-outlined"><?php echo esc_html($sub_metabox_attr['icon']); ?></span>
+                                                    <div class="wp-mv-tab-info">
+                                                        <span class="wp-mv-tab-label"><?php echo esc_html($sub_metabox_attr["label"]); ?></span>
+                                                        <span class="wp-mv-tab-description">
+                                                            <?php echo array_key_exists("description", $sub_metabox_attr) ? esc_html($sub_metabox_attr["description"]) : ''; ?>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </li>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 </ul>
                 <div class="wp_mv_metaboxs__content">
@@ -130,10 +151,12 @@ if (!class_exists('WP_MV_Metabox')) {
                                 <h2 class="wp_mv_metaboxs__title"><?php echo esc_html($attr["label"]); ?></h2>
                             </div>
                             <div class="wp_mv_metaboxs__items">
-                                <?php foreach ($attr["items"] as $name => $field): ?>
-                                    <?php $value = get_post_meta($post->ID, $name, true); ?>
-                                    <?php $this->render_field($name, $field, $value); ?>
-                                <?php endforeach; ?>
+                                <?php if (isset($attr["items"])): ?>
+                                    <?php foreach ($attr["items"] as $name => $field): ?>
+                                        <?php $value = get_post_meta($post->ID, $name, true); ?>
+                                        <?php $this->render_field($name, $field, $value); ?>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -141,6 +164,7 @@ if (!class_exists('WP_MV_Metabox')) {
             </div>
 <?php
         }
+
 
         private function render_field($name, $field, $value)
         {
@@ -181,6 +205,13 @@ if (!class_exists('WP_MV_Metabox')) {
                                     }, $_POST[$name]);
 
                                     update_post_meta($post_id, $name, $multi_values);
+                                }
+                                break;
+                            case 'checkbox':
+                                if (isset($_POST[$name])) {
+                                    update_post_meta($post_id, $name, '1');
+                                } else {
+                                    delete_post_meta($post_id, $name);
                                 }
                                 break;
                             case 'query_posts':

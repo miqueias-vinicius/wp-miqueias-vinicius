@@ -32,6 +32,10 @@
   text-decoration: none;
 }
 
+.wp_mv_metaboxs__sidebar__item__child {
+  display: none;
+}
+
 .wp_mv_metaboxs__sidebar .wp_mv_metaboxs__sidebar__item:hover a {
   background-color: #ffffff;
   color: #1e293b;
