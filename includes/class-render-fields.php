@@ -45,9 +45,10 @@ if (!class_exists('WP_MV_RenderFields')) {
 
         private static function render_checkbox_field($name, $field, $value)
         {
+            $checked = checked($value, true, false);
             echo "<div class='group'>";
             echo "<label for='{$name}'>";
-            echo "<input id='{$name}' type='checkbox' name='{$name}' value='1' " . checked($value, '1') . " />";
+            echo "<input id='{$name}' type='checkbox' name='{$name}' {$checked} value='1' />";
             echo "{$field['label']}";
             echo "</label>";
             echo "</div>";
