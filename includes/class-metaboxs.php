@@ -212,10 +212,8 @@ if (!class_exists('WP_MV_Metabox')) {
                             }
                             break;
                         case 'gallery':
-                            if (is_array($_POST[$name])) {
-                                $gallery_values = array_map('esc_url_raw', $_POST[$name]);
-                                update_post_meta($post_id, $name, $gallery_values);
-                            }
+                            $gallery_values = isset($_POST[$name]) && is_array($_POST[$name]) ? array_map('esc_url_raw', $_POST[$name]) : [];
+                            update_post_meta($post_id, $name, $gallery_values);
                             break;
                         case 'checkbox':
                             if (isset($_POST[$name]) && $_POST[$name] === '1') {
